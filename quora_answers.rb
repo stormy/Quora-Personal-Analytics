@@ -18,7 +18,7 @@ puts "\n"
 page = Nokogiri::HTML(doc)
 doc.close
 
-answerer_name = page.search('h1').inner_text # grabs full name from html to use as part of filename
+answerer_name = page.search('title').inner_text.split('Answers - Quora')[0].strip # grabs full name from html to use as part of filename
 d = DateTime.now
 date = d.year.to_s + d.month.to_s + d.day.to_s + "_" + d.min.to_s # construct a datetime string to keep track of different csv output files
 
