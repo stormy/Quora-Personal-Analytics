@@ -13,7 +13,7 @@ if not Dir.pwd == directory
 end
 
 doc = File.open("answers_#{ARGV[0]}.html") # first commandline argument should be firstname
-pp "Now processing" + doc.inspect
+pp "Now processing " + doc.inspect
 puts "\n"
 page = Nokogiri::HTML(doc)
 doc.close
@@ -59,24 +59,6 @@ def comments(comment)
   end
 end
 
-def voters(list)
-  array = Array.new
-  list.each_with_index do |x,i|
-    array[i] = x.attribute('href').value
-  end
-
-  array2 = Array.new
-  list.each_with_index do |x,i|
-    array2[i] = x.inner_text
-  end
-
-  ordered_list = Array.new
-  list.each_with_index do|x,i|
-    ordered_list[i] = [array2[i], array[i]]
-  end
-  ordered_list
-end
-
 def bio(answer_user)
   if answer_user.css('.rep').empty?
     ""
@@ -109,7 +91,7 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     'answerer_url' => answer.search('span[@class="feed_item_answer_user"]/a').attribute('href').value,
     'answerer_bio' => bio(answer.css('.feed_item_answer_user')),
     'votes' => answer.search('strong[@class="voter_count"]').inner_text,
-    'voter_list' => voters(answer.search('span[@class="answer_voters"]//a[@class="user"]')).uniq,
+    'voter_list' => answer.search('span[@class="answer_voters"]//a[@class="user"]').collect {|x| [x.inner_text, x.attribute('href').value]},
     'comments_num' => comments(answer.search('div[@class="action_bar"]')),
     'answer_url' => answer.search('a[@class="answer_permalink"]').attribute('href').value,
     'answer_date' => answer.search('a[@class="answer_permalink"]').inner_text,
