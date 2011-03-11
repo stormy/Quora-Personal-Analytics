@@ -77,6 +77,14 @@ def voters(list)
   ordered_list
 end
 
+def bio(answer_user)
+  if answer_user.css('.rep').empty?
+    ""
+  else
+    answer_user.search('span[@class="rep"]').inner_text.split(',')[1].strip
+  end
+end
+
 most_votes = []
 most_comments = []
 total_votes = 0
@@ -99,7 +107,7 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     'question_url' => answer.search('a[@class="question_link"]').attribute('href').value,
     'answerer' => answer.search('span[@class="feed_item_answer_user"]/a').inner_text,
     'answerer_url' => answer.search('span[@class="feed_item_answer_user"]/a').attribute('href').value,
-    'answerer_bio' => answer.search('span[@class="rep"]').inner_text.split(',')[1].strip,
+    'answerer_bio' => bio(answer.css('.feed_item_answer_user')),
     'votes' => answer.search('strong[@class="voter_count"]').inner_text,
     'voter_list' => voters(answer.search('span[@class="answer_voters"]//a[@class="user"]')).uniq,
     'comments_num' => comments(answer.search('div[@class="action_bar"]')),
