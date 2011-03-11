@@ -91,7 +91,7 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     'answerer_url' => answer.search('span[@class="feed_item_answer_user"]/a').attribute('href').value,
     'answerer_bio' => bio(answer.css('.feed_item_answer_user')),
     'votes' => answer.search('strong[@class="voter_count"]').inner_text,
-    'voter_list' => answer.search('span[@class="answer_voters"]//a[@class="user"]').collect {|x| [x.inner_text, x.attribute('href').value]},
+    'voter_list' => answer.search('span[@class="answer_voters"]//a[@class="user"]').collect {|x| [x.inner_text, x.attribute('href').value]}.uniq,
     'comments_num' => comments(answer.search('div[@class="action_bar"]')),
     'answer_url' => answer.search('a[@class="answer_permalink"]').attribute('href').value,
     'answer_date' => answer.search('a[@class="answer_permalink"]').inner_text,
