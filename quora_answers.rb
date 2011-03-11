@@ -2,8 +2,9 @@ require 'rubygems'
 require 'CSV'
 require 'nokogiri'
 require 'pp'
+require 'date'
 
-STDOUT.sync = true
+STDOUT.sync = true # terminal setting so print "*" actually displays
 
 directory = "#{ENV['HOME']}/Quora-Personal-Analytics"
 
@@ -11,31 +12,38 @@ if not Dir.pwd == directory
   Dir.chdir directory
 end
 
-doc = File.open("answers_#{ARGV[0]}.html")
+doc = File.open("answers_#{ARGV[0]}.html") # first commandline argument should be firstname
 pp "Now processing" + doc.inspect
 puts "\n"
 page = Nokogiri::HTML(doc)
 doc.close
 
-answerer_name = page.search('h1').inner_text
-date = DateTime.now.to_s
+answerer_name = page.search('h1').inner_text # grabs full name from html to use as part of filename
+d = DateTime.now
+date = d.year.to_s + d.month.to_s + d.day.to_s + "_" + d.min.to_s # construct a datetime string to keep track of different csv output files
 
+## Creates a CSV file that contains header rows for all answer attributes
 outfile = File.open("#{answerer_name}_answers_#{date}.csv", 'ab')
 CSV::Writer.generate(outfile, ',') do |csv|
  csv << [ "question", "question_url", "answerer", "answerer_url", "answerer_bio", "votes", "comments_num", "answer_date", "images",
    "breaks", "italics", "blockquote", "list_item", "anchor", "underline", "codeblock", "latex", "answer_length", "answer", "answer_url", "voter_list", "commenter_list" ]
 end
 
+## Creates a CSV file that contains header rows for the list of all voters for an answerer
 outfile_voters = File.open("#{answerer_name}_voters_#{date}.csv", 'ab')
 CSV::Writer.generate(outfile_voters, ',') do |csv|
  csv << [ "question", "voter_name", "voter_url" ]
 end
 
+## Creates a CSV file that contains header rows for the list of all commenters for an answerer.
+## If there are multiple comments from one user on one question, those are logged too.
 outfile_commenters = File.open("#{answerer_name}_commenters_#{date}.csv", 'ab')
 CSV::Writer.generate(outfile_commenters, ',') do |csv|
  csv << [ "question", "commenter_url" ]
 end
 
+## The answer content div includes extraneous divs that need to be removed.
+## This returns a clean content div.
 def content(content_div)
    content_div.css('.comments.answer_comments.hidden').remove
    content_div.css('.answer_user').remove
@@ -99,7 +107,7 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     'answer_date' => answer.search('a[@class="answer_permalink"]').inner_text,
     'answer' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).inner_text,
     'answer_length' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).length,
-    'images' => answer.search('div[@class="feed_item_answer_content answer_content"]/img').length - content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('img[@class="math"]').length,
+    'images' => answer.search('div[@class="feed_item_answer_content answer_content"]//img').length  - content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('img[@class="math"]').length,
     'breaks' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('br').length,
     'italics' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('i').length,
     'blockquote' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('blockquote').length,
