@@ -3,6 +3,8 @@ require 'CSV'
 require 'nokogiri'
 require 'pp'
 
+STDOUT.sync = true
+
 directory = "#{ENV['HOME']}/Quora-Personal-Analytics"
 
 if not Dir.pwd == directory
@@ -11,6 +13,7 @@ end
 
 doc = File.open("answers_#{ARGV[0]}.html")
 pp "Now processing" + doc.inspect
+puts "\n"
 page = Nokogiri::HTML(doc)
 doc.close
 
@@ -24,12 +27,12 @@ CSV::Writer.generate(outfile, ',') do |csv|
 end
 
 outfile_voters = File.open("#{answerer_name}_voters_#{date}.csv", 'ab')
-CSV::Writer.generate(outfile, ',') do |csv|
+CSV::Writer.generate(outfile_voters, ',') do |csv|
  csv << [ "question", "voter_name", "voter_url" ]
 end
 
 outfile_commenters = File.open("#{answerer_name}_commenters_#{date}.csv", 'ab')
-CSV::Writer.generate(outfile, ',') do |csv|
+CSV::Writer.generate(outfile_commenters, ',') do |csv|
  csv << [ "question", "commenter_name", "commenter_url" ]
 end
 
@@ -66,7 +69,6 @@ def voters(list)
   ordered_list
 end
 
-
 most_votes = []
 most_comments = []
 total_votes = 0
@@ -78,8 +80,12 @@ total_links = 0
 voter_array = []
 
 page.css('div.e_col.w4_5').each_with_index do |answer, index|
+  
+  print "*"
+  
   comment_urls = answer.search('p[@class="action_bar"]//a[@class="user"]').collect {|x| x.attribute('href').value}
   voter_urls = answer.search('span[@class="answer_voters"]//a[@class="user"]').collect {|x| x.attribute('href').value}.uniq
+  
   answer_info = {
     'question' => answer.search('a[@class="question_link"]').inner_text,
     'question_url' => answer.search('a[@class="question_link"]').attribute('href').value,
@@ -104,6 +110,7 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     'latex' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('img[@class="math"]').length,
     'commenter_list' => comment_urls,
   }
+
   most_comments << answer_info['commenter_list']
   most_votes << voter_urls
   total_votes += answer_info['votes'].to_i
@@ -127,14 +134,11 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     end
   end
 
-  answer_info['commenter_list'].each do |commenter|
-    CSV::Writer.generate(outfile_commenters, ',') do |csv|
-      csv << [ answer_info['question'], commenter[0], commenter[1] ]
-    end
+  CSV::Writer.generate(outfile_commenters, ',') do |csv|
+    csv << [ answer_info['question'], answer_info['commenter_list']  ]
   end
 
 end
-
 
 b = Hash.new(0)
 c = Hash.new(0)
@@ -147,16 +151,21 @@ most_votes.flatten.sort.each do |v|
   c[v] +=1
 end
 
+puts "########Top Commenters########"
 pp b.sort {|a,b| a[1]<=>b[1]}
+puts "########End Top Commenters########"
 puts "\n"
+puts "########Top Voters########"
 pp c.sort {|a,b| a[1]<=>b[1]}
+puts "########End Top Voters########"
+puts "\n"
 
 #c.each do |k,v|
   #percent = v.quo(total_answers)*100.to_f
   #pp k + " has upvoted " + v.to_s + " answers and votes " + percent.to_s + " percent of the time."
 #end
 
-puts "Answer Summary Stats"
+puts "########Answer Summary Stats########"
 puts "Total answers: " + total_answers.to_s
 puts "Total votes: " + total_votes.to_s
 puts "Total comments: " + total_comments.to_s
