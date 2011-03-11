@@ -33,7 +33,7 @@ end
 
 outfile_commenters = File.open("#{answerer_name}_commenters_#{date}.csv", 'ab')
 CSV::Writer.generate(outfile_commenters, ',') do |csv|
- csv << [ "question", "commenter_name", "commenter_url" ]
+ csv << [ "question", "commenter_url" ]
 end
 
 def content(content_div)
@@ -134,10 +134,11 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     end
   end
 
+  answer_info['commenter_list'].each do |comment|
   CSV::Writer.generate(outfile_commenters, ',') do |csv|
-    csv << [ answer_info['question'], answer_info['commenter_list']  ]
+    csv << [ answer_info['question'], comment  ]
   end
-
+  end
 end
 
 b = Hash.new(0)
