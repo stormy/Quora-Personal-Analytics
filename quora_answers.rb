@@ -96,7 +96,7 @@ page.css('div.e_col.w4_5').each_with_index do |answer, index|
     'answer_url' => answer.search('a[@class="answer_permalink"]').attribute('href').value,
     'answer_date' => answer.search('a[@class="answer_permalink"]').inner_text,
     'answer' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).inner_text,
-    'answer_length' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).length,
+    'answer_length' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).inner_text.length,
     'images' => answer.search('div[@class="feed_item_answer_content answer_content"]//img').length  - content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('img[@class="math"]').length,
     'breaks' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('br').length,
     'italics' => content(answer.search('div[@class="feed_item_answer_content answer_content"]')).search('i').length,
