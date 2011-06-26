@@ -8,7 +8,7 @@ class Answer
 
   def initialize(fragment)
     @fragment = fragment
-    @title = fragment#.css('.question_link').inner_text
+    @title = fragment.css('.question_link').inner_text
     @url = fragment.css('.question_link').attribute('href').value
     @date = fragment.search('a[@class="answer_permalink"]').inner_text
     @bio = bio_check(fragment.css('.feed_item_answer_user'))

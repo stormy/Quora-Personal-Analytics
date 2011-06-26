@@ -1,6 +1,7 @@
+require 'httparty'
 class Content
 
-  attr_reader :text, :images, :breaks, :italics, :blockquote, :list_item, :links, :underline, :codeblock, :latex
+  attr_reader :text, :images, :breaks, :italics, :blockquote, :list_item, :links, :underline, :codeblock, :latex, :emotion, :emotionwords
 
   def initialize(fragment)
     strip_divs(fragment.dup)
@@ -14,6 +15,8 @@ class Content
     @underline = fragment.css('u')
     @codeblock = fragment.css('.codeblocktable') #+ fragment.css('pre')
     @latex = fragment.css('.math')
+    @emotion = EffectCheck.post('/RestApi/score', :body => {:Category => "Generic", :Content => "#{@text}"})
+    @emotionwords = EffectCheck.post('/RestApi/EmotionWords', :body => {:Category => "Generic", :Content => "#{@text}"})
   end
 
   def strip_divs(content_div)
@@ -24,4 +27,11 @@ class Content
      stripped.css('.add_answer_tag').remove
      stripped
   end
+
+  class EffectCheck
+    include HTTParty
+    base_uri 'http://effectcheck.com/'
+    basic_auth 'team7', 'WIU9L3ODvPUlozhElQB9Ecp3zgYbdrF31u3fabpCR3IHxUa90wKBPGItTR9eVnZ3'
+  end
+
 end
