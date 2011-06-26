@@ -34,11 +34,60 @@
       chart.draw(data, {width: 400, height: 240});
     }
     </script>
+
+    <script type="text/javascript">
+    
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1', {'packages':['corechart']});
+      
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+      
+      // Callback that creates and populates a data table, 
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+      // Create our data table.
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Emotions');
+      data.addColumn('number', 'Intensity');
+      data.addRows([
+        ['Compassion', 0.9703947368421053],
+        ['Confidence', 1.708333333333331],
+        ['Anxiety', 4],
+        ['Hostility', 3.22916666666667],
+        ['Depression', 3.90625],
+        ['Happiness', 2.609375]
+
+      ]);
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
+      chart.draw(data, {width: 400, height: 240, title: 'Test title number 2'});
+    }
+    </script>
+
   </head>
 
   <body>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
+    <div id="chart_div2"></div>
   </body>
 </html>
+
+
+puts "<h1>#{answer.title}</h1><ul><li>Votes: #{answer.votes}</li></ul>"
+    puts "<div id='chart_div#{index}'></div>"
+    puts "<table>"
+    answer.content.emotionwords.each do |word|
+      puts <tr>
+      word.each do |emotion|
+        puts "<td>#{word['word']}</td>"
+      end
+      puts </tr>
+    end
+    
+    puts "</table>"
 
