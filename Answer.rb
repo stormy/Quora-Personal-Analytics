@@ -1,5 +1,5 @@
 #require 'extensions/all'
-require_relative 'Content'
+require 'Content'
 
 
 class Answer

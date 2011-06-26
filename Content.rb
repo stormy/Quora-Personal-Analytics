@@ -21,6 +21,7 @@ class Content
      stripped.css('.comments.answer_comments.hidden').remove
      stripped.css('.answer_user').remove
      stripped.css('.action_bar').remove
+     stripped.css('.add_answer_tag').remove
      stripped
   end
 end

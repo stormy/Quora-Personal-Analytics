@@ -55,7 +55,7 @@ class QuoraHtmlLoader
   end
   
   def loadhtml(type, selector)
-    file = File.open("results_#{type}/#{@name}_#{type}.html")
+    file = File.open("#{@name}/#{type}.html")
     html = Nokogiri::HTML(file)
     file.close
     result = []

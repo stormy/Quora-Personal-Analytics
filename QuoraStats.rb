@@ -67,4 +67,7 @@ puts ""
 puts "***Not following back:"
 puts (user.following.collect {|x| x.url} - user.followers.collect {|x| x.url}) #not following you back
 puts ""
+puts "***Not following, but followed by:"
+puts (user.followers.collect {|x| x.url} - user.following.collect {|x| x.url}) #not following but follewd by
+puts ""
 pp user.about.bio
