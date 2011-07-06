@@ -4,7 +4,7 @@ class QuoraUser
 
   def initialize(user_name)
     @name = user_name
-    @url = "http:www.quora.com/" + @name + "/"
+    @url = "http://www.quora.com/" + @name + "/"
     @load = QuoraHtmlLoader.new(@name)
   end
 
@@ -20,7 +20,7 @@ class QuoraUser
   end
 
   def load_answers
-    
+   @answers = @load.answers 
   end
 
   def votes_total

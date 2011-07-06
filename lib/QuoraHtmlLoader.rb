@@ -75,7 +75,7 @@ class QuoraHtmlLoader
       elsif type == 'posts'
         result << Post.new(item)
       elsif type == 'about'
-        result = About.new(item)
+        result << About.new(item)
       end
     end
     result

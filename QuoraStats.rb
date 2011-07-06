@@ -2,25 +2,21 @@ require 'rubygems'
 require 'CSV'
 require 'nokogiri'
 require 'pp'
-require 'date'
-# require 'extensions/all'
 
-require '~/Quora-Personal-Analytics/QuoraUser.rb'
-require '~/Quora-Personal-Analytics/QuoraHtmlLoader.rb'
-require '~/Quora-Personal-Analytics/About.rb'
-require '~/Quora-Personal-Analytics/Answer.rb'
-require '~/Quora-Personal-Analytics/Comment.rb'
-require '~/Quora-Personal-Analytics/Content.rb'
-require '~/Quora-Personal-Analytics/Follower.rb'
-require '~/Quora-Personal-Analytics/Following.rb'
-require '~/Quora-Personal-Analytics/Mention.rb'
-require '~/Quora-Personal-Analytics/Post.rb'
-require '~/Quora-Personal-Analytics/Question.rb'
-require '~/Quora-Personal-Analytics/QuestionTopic.rb'
-require '~/Quora-Personal-Analytics/Topic.rb'
-require '~/Quora-Personal-Analytics/Voter.rb'
-
-STDOUT.sync = true # terminal setting so print "*" actually displays
+require './lib/QuoraUser'
+require './lib/QuoraHtmlLoader'
+require './lib/About'
+require './lib/Answer'
+require './lib/Comment'
+require './lib/Content'
+require './lib/Follower'
+require './lib/Following'
+require './lib/Mention'
+require './lib/Post'
+require './lib/Question'
+require './lib/QuestionTopic'
+require './lib/Topic'
+require './lib/Voter'
 
 directory = "#{ENV['HOME']}/Quora-Personal-Analytics"
 
@@ -70,4 +66,3 @@ puts ""
 puts "***Not following, but followed by:"
 puts (user.followers.collect {|x| x.url} - user.following.collect {|x| x.url}) #not following but follewd by
 puts ""
-pp user.about.bio
