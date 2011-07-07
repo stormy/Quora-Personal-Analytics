@@ -1,5 +1,7 @@
 Use to only analyze *your* personal Quora account. Read [Quora's TOS](http://www.quora.com/about/tos).
 
+The instructions below are largely for people who are already familiar with Ruby development using RVM and Bundler.
+
 Need to be running Ruby 1.8.7 with Firefox 3.6. I have only tested code under OS X Snow Leopard.
 
 Expects there to be a /Quora-Personal-Analytics folder inside your home directory.
@@ -7,6 +9,9 @@ Expects there to be a /Quora-Personal-Analytics folder inside your home director
 Running "bundle install" should get everything necessary except the [JSSH Firefox Extenstion](http://wiki.openqa.org/display/WTR/FireWatir+Installation#FireWatirInstallation-2%29InstalltheJSSHFirefoxExtension) which you must install.
 
 To run the code in current incarnation, you'll need to start Firefox with the JSSH flag enabled. For OS X it will look like: /Applications/Firefox.app/Contents/MacOS/firefox-bin -jssh
+
+
+Note: once you start Firefox with -jssh enabled, you need to make sure you are logged into your Quora account, or you won't get far.
 
 Grab all your data as HTML files: ruby QuoraCrawler.rb "firstname-lastname" (ex. firstname-lastname from http://quora.com/*firstname-lastname*/. You might need a number like firstname-lastname-1).
 
