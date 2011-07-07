@@ -1,6 +1,6 @@
 class Question
 
-  attr_reader :title, :url, :content, :answers_total
+  attr_reader :title, :url, :content, :answers_total, :topics_total, :topics
 
   def initialize(fragment)
     @title = fragment.css('.question_link').inner_text
