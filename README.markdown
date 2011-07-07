@@ -31,9 +31,18 @@ You'll also need [Firefox 3.6](http://www.mozilla.com/en-US/firefox/all-older.ht
 
 To run the code in current incarnation, you'll need to start Firefox with the JSSH flag enabled. For OS X it will look like: /Applications/Firefox.app/Contents/MacOS/firefox-bin -jssh
 
-From inside the directory, grab all your data as HTML files: ruby QuoraCrawler.rb "firstname-lastname" (ex. firstname-lastname from http://quora.com/*firstname-lastname*/. You might need a number like firstname-lastname-1).
+Log into Quora, otherwise, you won't get far.
 
-Process your data using: ruby QuoraStats.rb "firstname-lastname"
+From inside the directory, grab all your personal data as HTML files: 
+ruby QuoraCrawler.rb "firstname-lastname"
+(note: http://quora.com/*firstname-lastname*/. You might need a number like firstname-lastname-1).
 
-Right now QuoraStats.rb is only outputting limited detail, but if you call the loadalldata method on a QuoraUser object in irb, then you can play around with extracting out all the data that interests you. (ex: user = QuoraUser.new('firstname-lastname') ; user.loadalldata ; user.answers[0].content.text.length => user's first answer's content length)
+Process your data:
+ruby QuoraStats.rb "firstname-lastname"
+
+Done.
+
+--
+
+Right now QuoraStats.rb is only outputting limited detail, but if you call the loadalldata method on a QuoraUser object in irb, you can then play around with extracting out all the data that interests you. (ex: user = QuoraUser.new('firstname-lastname') ; user.loadalldata ; user.answers[0].content.text.length => user's most recent answer's content length ; user.answers[0].voters[0].fullname => Full name of first person who upvoted users most recent answer)
 
