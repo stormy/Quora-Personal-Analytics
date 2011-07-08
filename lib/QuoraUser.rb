@@ -31,5 +31,30 @@ class QuoraUser
     total_votes 
   end
 
+  def voters_to_array
+    all_voters = []
+    answers.each do |x|
+      x.voters.each do |y|
+        all_voters << y
+      end
+    end
+    all_voters  
+  end
+
+  def most_voters_array 
+    voters = Hash.new(0)
+    voters_to_array.flatten.each do |x|
+      voters[x] += 1
+    end
+    voters.sort {|a, b| -1*(a[1] <=> b [1])}
+
+  end
+
+  def top_voters
+    most_voters_array[0..19].each do |voter|
+      puts voter[1].to_s + " votes from: " + voter[0].url + " (" + voter[0].fullname + ")"
+    end
+  end
+
 end
 
