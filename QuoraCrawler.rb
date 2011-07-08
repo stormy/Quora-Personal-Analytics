@@ -53,6 +53,7 @@ def get_answers(b, name)
   b.goto "http://www.quora.com/#{name}/answers"
   click_more(b)
   expand_more(b)
+  sleep(3)
   File.open("#{name}/answers.html", 'w') {|f| f.write(b.html)}
 end
 
