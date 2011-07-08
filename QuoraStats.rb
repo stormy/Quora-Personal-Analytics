@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'CSV'
 require 'nokogiri'
-require 'pp'
 
 require './lib/QuoraUser'
 require './lib/QuoraHtmlLoader'
@@ -35,6 +34,7 @@ puts ""
 puts "***Answer Stats***"
 puts "Total Answers: " + user.answers.length.to_s
 puts "        Votes: " + user.votes_total.to_s
+puts "  Uniq Voters: " + user.voters_to_array.uniq.length.to_s
 
 total=0
 user.answers.each do |x|
@@ -65,4 +65,8 @@ puts (user.following.collect {|x| x.url} - user.followers.collect {|x| x.url}) #
 puts ""
 puts "***Not following, but followed by:"
 puts (user.followers.collect {|x| x.url} - user.following.collect {|x| x.url}) #not following but follewd by
+puts ""
+puts ""
+puts "***Your Top Voters:"
+     user.top_voters
 puts ""
