@@ -9,15 +9,29 @@ class Answer
     @date = fragment.search('a[@class="answer_permalink"]').inner_text
     @bio = bio_check(fragment.css('.feed_item_answer_user'))
     @votes = fragment.search('strong[@class="voter_count"]').inner_text
-    @voters = build_voters(fragment.css('.answer_voters').css('.user'))
+    @voters = build_voters(fragment.css('.answer_voters'))
     @comments = build_comments(fragment)
     @content = Content.new(fragment.search('div[@class="feed_item_answer_content answer_content"]'))
   end
 
-  def build_voters(allvoters)
+  def build_voters1(allvoters)
     voter_list = []
     allvoters.each_with_index do |x,i|
       voter_list << Voter.new(x,i)
+    end
+    voter_list
+  end
+
+  def build_voters(answer_voters)
+    voter_list = []
+    if answer_voters.css('span.hidden').empty?
+      answer_voters.css('.user').each_with_index do |x,i|
+        voter_list << Voter.new(x,i)
+      end
+    else
+      answer_voters.css('span.hidden').css('.user').each_with_index do |x,i|
+        voter_list << Voter.new(x,i)
+      end
     end
     voter_list
   end
