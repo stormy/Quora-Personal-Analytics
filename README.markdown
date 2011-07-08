@@ -44,5 +44,12 @@ Done.
 
 --
 
-Right now QuoraStats.rb is only outputting limited detail, but if you call the loadalldata method on a QuoraUser object in irb, you can then play around with extracting out all the data that interests you. (ex: user = QuoraUser.new('firstname-lastname') ; user.loadalldata ; user.answers[0].content.text.length => user's most recent answer's content length ; user.answers[0].voters[0].fullname => Full name of first person who upvoted users most recent answer)
+Right now QuoraStats.rb is only outputting limited detail, but if you call the load_all_data method on a QuoraUser object in irb, you can then play around with extracting out all the data that interests you.
+
+Example:
+
+user = QuoraUser.new('firstname-lastname')
+user.loadalldata
+user.answers[0].content.text.length => user's most recent answer's answer length
+user.answers[0].voters[0].fullname => Full name of first person who upvoted users most recent answer)
 
