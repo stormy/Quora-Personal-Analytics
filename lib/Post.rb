@@ -30,7 +30,7 @@ class Post
   def build_voters(allvoters)
     voter_list = []
     allvoters.each_with_index do |x,i|
-      voter_list << Voter.new(x,i)
+      voter_list << Voter.new(x,i,@url)
     end
     voter_list
   end  

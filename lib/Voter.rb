@@ -1,11 +1,12 @@
 class Voter
 
-  attr_reader :order, :fullname, :url
+  attr_reader :order, :fullname, :url, :answer_url
 
-  def initialize(voter,index)
+  def initialize(voter,index,answer_url)
     @order = index
     @fullname = voter.inner_text
     @url = voter.attribute('href').value
+    @answer_url = answer_url
   end
 
   def ==(other)

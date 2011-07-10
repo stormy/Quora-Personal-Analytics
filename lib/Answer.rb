@@ -14,23 +14,15 @@ class Answer
     @content = Content.new(fragment.search('div[@class="feed_item_answer_content answer_content"]'))
   end
 
-  def build_voters1(allvoters)
-    voter_list = []
-    allvoters.each_with_index do |x,i|
-      voter_list << Voter.new(x,i)
-    end
-    voter_list
-  end
-
   def build_voters(answer_voters)
     voter_list = []
     if answer_voters.css('span.hidden').empty?
       answer_voters.css('.user').each_with_index do |x,i|
-        voter_list << Voter.new(x,i)
+        voter_list << Voter.new(x,i,@url)
       end
     else
       answer_voters.css('span.hidden').css('.user').each_with_index do |x,i|
-        voter_list << Voter.new(x,i)
+        voter_list << Voter.new(x,i,@url)
       end
     end
     voter_list
