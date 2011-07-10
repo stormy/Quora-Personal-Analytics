@@ -1,6 +1,6 @@
 class Answer
 
-  attr_reader :fragment, :title, :url, :bio, :date, :votes, :voters, :content, :comments_total, :comments, :total_comments
+  attr_reader :fragment, :title, :url, :bio, :date, :votes, :voters, :anon_votes, :content, :comments_total, :comments, :total_comments
 
   def initialize(fragment)
     @fragment = fragment
@@ -10,6 +10,7 @@ class Answer
     @bio = bio_check(fragment.css('.feed_item_answer_user'))
     @votes = fragment.search('strong[@class="voter_count"]').inner_text
     @voters = build_voters(fragment.css('.answer_voters'))
+    @anon_votes = (@votes.to_i - @voters.length.to_i)
     @comments = build_comments(fragment)
     @content = Content.new(fragment.search('div[@class="feed_item_answer_content answer_content"]'))
   end
