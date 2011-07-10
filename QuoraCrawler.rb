@@ -62,18 +62,19 @@ if not File.exist?(name)
 end
 
 def click_more(b)
-  while !b.cell(:xpath, "//div[@class='pager_next action_button' and @style='display: none;']").exists?
-    b.cell(:xpath, "//div[@class='pager_next action_button']").click
+  if b.cell(:xpath, "//div[@class='pager_next action_button']").exists?
+    while !b.cell(:xpath, "//div[@class='pager_next action_button' and @style='display: none;']").exists?
+      b.cell(:xpath, "//div[@class='pager_next action_button']").click
+    end
   end
 end
 
 def expand_more(b)
-  while b.cell(:xpath, "//span[@class='answer_voters']//a[@class='more_link']").exists?
+  if b.cell(:xpath, "//span[@class='answer_voters']//a[@class='more_link']").exists?
+    while b.cell(:xpath, "//span[@class='answer_voters']//a[@class='more_link']").exists?
       b.cell(:xpath, "//span[@class='answer_voters']//a[@class='more_link']").click
     end
-#  while b.cell(:xpath, "//span[@class='answer_voters']//span[@class='more_link']/a").exists?
-#    b.cell(:xpath, "//span[@class='answer_voters']//span[@class='more_link']/a").click
-#  end
+  end
 end
 
 def get_following(b, name)
