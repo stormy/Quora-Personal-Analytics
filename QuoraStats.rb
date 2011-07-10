@@ -33,17 +33,21 @@ puts "User BIO: "
 puts ""
 puts "***Answer Stats***"
 puts "Total Answers: " + user.answers.length.to_s
+puts "Votes/Answers: " + (user.votes_total.to_f / user.answers.length.to_f).to_s
 puts "        Votes: " + user.votes_total.to_s
 puts "  Uniq Voters: " + user.voters_to_array.uniq.length.to_s
-
-total=0
-user.answers.each do |x|
-  total += x.total_comments
-end
-puts "     Comments: " + total.to_s
+puts "     Comments: " + user.comments_total.to_s
 puts ""
 puts "***Question Stats***"
-puts "Total Questions: " + user.questions.length.to_s
+puts "Total Questions:          " + user.questions.length.to_s
+puts "  Question Followers :    " + user.questions_total_followers.to_s
+puts "  Question Answers:       " + user.questions_total_answers.to_s
+puts "  Followers/Questions: " + (user.questions_total_followers.to_f / user.questions.length.to_f).to_s
+puts "  Answers/Questions: " + (user.questions_total_answers.to_f / user.questions.length.to_f).to_s
+puts "  Questions not Followed: " + user.questions_not_followed.to_s
+puts "  Questions not Answered: " + user.questions_not_answered.to_s
+puts "  Most Followed Question: " + user.question_most_followed.title + " with " + user.question_most_followed.followers_total.to_s + " followers."
+puts "  Most Answered Question: " + user.question_most_answered.title + " with " + user.question_most_answered.answers_total.to_s + " answers."
 puts ""
 puts "***Post Stats***"
 puts "Total Posts: " + user.posts.length.to_s
