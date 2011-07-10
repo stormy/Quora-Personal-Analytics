@@ -3,6 +3,7 @@ require 'bundler/setup'
 
 require 'date'
 require 'watir'
+require 'optparse'
 
 STDOUT.sync = true # terminal setting so print "*" actually displays
 
@@ -11,6 +12,44 @@ directory = "#{ENV['HOME']}/Quora-Personal-Analytics"
 if not Dir.pwd == directory
   Dir.chdir directory
 end
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options] 'first-last'. No options to crawl all."
+
+  opts.on("-a", "--answers", "Crawl Answers only") do |v|
+    options[:answers] = v
+  end
+
+  opts.on("-f", "--followers", "Crawl followers only") do |v|
+    options[:followers] = v
+  end
+
+  opts.on("-n", "--following", "Crawl following only") do |v|
+    options[:following] = v
+  end
+
+  opts.on("-q", "--questions", "Crawl questions only") do |v|
+    options[:questions] = v
+  end
+
+  opts.on("-p", "--posts", "Crawl posts only") do |v|
+    options[:posts] = v
+  end
+
+  opts.on("-t", "--topics", "Crawl topics only") do |v|
+    options[:topics] = v
+  end
+
+  opts.on("-m", "--mentions", "Crawl mentions only") do |v|
+    options[:mentions] = v
+  end
+
+  opts.on("-r", "--profile", "Crawl profile only") do |v|
+    options[:profile] = v
+  end
+
+end.parse!
 
 Watir::Browser.default = 'firefox'
 
@@ -93,11 +132,48 @@ def get_profile(b, name)
   File.open("#{name}/about.html", 'w') {|f| f.write(b.html)}
 end
 
-get_followers(b, name)
-get_following(b, name)
-get_answers(b, name)
-get_questions(b, name)
-get_posts(b, name)
-get_mentions(b, name)
-get_profile(b, name)
-get_topics(b, name)
+if options.empty?
+  get_followers(b, name)
+  get_following(b, name)
+  get_answers(b, name)
+  get_questions(b, name)
+  get_posts(b, name)
+  get_mentions(b, name)
+  get_profile(b, name)
+  get_topics(b, name)
+else
+  if options.include? :followers
+    get_followers(b, name)
+  end
+
+  if options.include? :following
+    get_following(b, name)
+  end
+
+  if options.include? :answers
+    get_answers(b, name)
+  end
+
+  if options.include? :questions
+    get_questions(b, name)
+  end
+
+  if options.include? :posts
+    get_posts(b, name)
+  end
+
+  if options.include? :topics
+    get_topics(b, name)
+  end
+
+  if options.include? :mentions
+    get_mentions(b, name)
+  end
+
+  if options.include? :profile
+    get_profile(b, name)
+  end
+
+end
+
+
