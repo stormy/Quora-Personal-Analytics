@@ -23,6 +23,35 @@ class QuoraUser
    @answers = @load.answers 
   end
 
+  def load_questions
+   @questions = @load.questions 
+  end
+
+  def load_followers
+   @followers = @load.followers 
+  end
+
+  def load_following
+   @following = @load.following 
+  end
+
+  def load_posts
+   @posts = @load.posts 
+  end
+
+  def load_topics
+   @topics = @load.topics 
+  end
+
+  def load_mentions
+   @mentions = @load.mentions
+  end
+
+  def load_profile
+   @about = @load.about 
+  end
+
+
   def votes_total
     total_votes = 0 
     answers.each do |x|
