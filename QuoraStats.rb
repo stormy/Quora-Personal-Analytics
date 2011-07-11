@@ -63,7 +63,9 @@ OptionParser.new do |opts|
   opts.on("-d", "--display_num NUM", Integer, "Sets number of results to display"){ |n| options[:display_num] = n }
 
 end.parse!
-
+if not options.include? :display_num
+  options[:display_num] = 20
+end
 user = QuoraUser.new(ARGV[0])
 def display_answers(user, options)
   puts "***Answer Stats***"
