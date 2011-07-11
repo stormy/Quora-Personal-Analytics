@@ -60,11 +60,12 @@ OptionParser.new do |opts|
     options[:profile] = v
   end
 
+  opts.on("-d", "--display_num NUM", Integer, "Sets number of results to display"){ |n| options[:display_num] = n }
+
 end.parse!
 
 user = QuoraUser.new(ARGV[0])
-
-def display_answers(user)
+def display_answers(user, options)
   puts "***Answer Stats***"
   puts "  Total Answers: " + user.answers.length.to_s
   puts "    Total Votes: " + user.votes_total.to_s
@@ -74,27 +75,27 @@ def display_answers(user)
   puts "       Comments: " + user.comments_total.to_s
   puts ""
   puts "  *Your Top Answers:"
-    user.top_answers(20)
+    user.top_answers(options[:display_num])
   puts ""
   puts "  *Your Top Voters:"
-    user.top_voters(20)
+    user.top_voters(options[:display_num])
   puts ""
 
 end
 
-def display_followers(user)
+def display_followers(user,options)
   puts "***Followers Stats***"
   puts "Total Followers " + user.followers.length.to_s
   puts ""
 end
 
-def display_following(user)
+def display_following(user,options)
   puts "***Following Stats***"
   puts "Total Following " + user.following.length.to_s
   puts "" 
 end
 
-def display_questions(user)
+def display_questions(user,options)
   puts "***Question Stats***"
   puts "Total Questions:          " + user.questions.length.to_s
   puts "  Question Followers :    " + user.questions_total_followers.to_s
@@ -110,25 +111,25 @@ def display_questions(user)
   puts ""
 end
 
-def display_posts(user)
+def display_posts(user,options)
   puts "***Post Stats***"
   puts "Total Posts: " + user.posts.length.to_s
   puts "" 
 end
 
-def display_topics(user)
+def display_topics(user,options)
   puts "***Topic Stats***"
   puts "Topics: " + user.topics.length.to_s
   puts ""  
 end
 
-def display_mentions(user)
+def display_mentions(user,options)
   puts "***Mention Stats"
   puts "Mentions: " + user.mentions.length.to_s
   puts "" 
 end
 
-def display_profile(user)
+def display_profile(user,options)
   puts "***User Overview***"
   puts "Username: " + user.name.to_s
   puts "User URL: " + user.url.to_s
@@ -136,7 +137,7 @@ def display_profile(user)
   puts ""
 end
 
-def display_combine_follow(user)
+def display_combine_follow(user,options)
   puts "***Not following back:"
   puts (user.following.collect {|x| x.url} - user.followers.collect {|x| x.url}) #not following you back
   puts ""
@@ -147,60 +148,60 @@ end
 
 
 
-if options.empty?
+if options.empty? or (options.include? :display_num and options.length == 1)
   user.load_all_data
-  display_profile(user)
-  display_answers(user)
-  display_questions(user)
-  display_followers(user)
-  display_following(user)
-  display_combine_follow(user)
-  display_posts(user)
-  display_topics(user)
-  display_mentions(user)
+  display_profile(user,options)
+  display_answers(user,options)
+  display_questions(user,options)
+  display_followers(user,options)
+  display_following(user,options)
+  display_combine_follow(user,options)
+  display_posts(user,options)
+  display_topics(user,options)
+  display_mentions(user,options)
 else
   if options.include? :followers
     user.load_followers
-    display_followers(user)
+    display_followers(user,options)
   end
 
   if options.include? :following
     user.load_following
-    display_following(user)
+    display_following(user,options)
   end
 
   if options.include? :following and options.include? :followers
-    display_combine_follow(user)
+    display_combine_follow(user,options)
   end
 
   if options.include? :answers
     user.load_answers
-    display_answers(user)
+    display_answers(user, options)
   end
 
   if options.include? :questions
     user.load_questions
-    display_questions(user)
+    display_questions(user,options)
   end
 
   if options.include? :posts
     user.load_posts
-    display_posts(user)
+    display_posts(user,options)
   end
 
   if options.include? :topics
     user.load_topics
-    display_topics(user)
+    display_topics(user,options)
   end
 
   if options.include? :mentions
     user.load_mentions
-    display_mentions(user)
+    display_mentions(user,options)
   end
 
   if options.include? :profile
     user.load_profile
-    display_profile(user)
+    display_profile(user,options)
   end
 end
 
