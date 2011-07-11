@@ -2,6 +2,12 @@ require 'rubygems'
 require 'CSV'
 require 'nokogiri'
 
+directory = File.dirname(__FILE__)
+
+if not Dir.pwd == directory
+  Dir.chdir directory
+end
+
 require './lib/QuoraUser'
 require './lib/QuoraHtmlLoader'
 require './lib/About'
@@ -16,12 +22,6 @@ require './lib/Question'
 require './lib/QuestionTopic'
 require './lib/Topic'
 require './lib/Voter'
-
-directory = "#{ENV['HOME']}/Quora-Personal-Analytics"
-
-if not Dir.pwd == directory
-  Dir.chdir directory
-end
 
 user = QuoraUser.new(ARGV[0])
 user.load_all_data

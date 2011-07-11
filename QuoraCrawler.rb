@@ -1,13 +1,10 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'date'
 require 'watir'
 require 'optparse'
 
-STDOUT.sync = true # terminal setting so print "*" actually displays
-
-directory = "#{ENV['HOME']}/Quora-Personal-Analytics"
+directory = File.dirname(__FILE__)
 
 if not Dir.pwd == directory
   Dir.chdir directory
