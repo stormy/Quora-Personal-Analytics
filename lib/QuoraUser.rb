@@ -88,19 +88,25 @@ class QuoraUser
 
   def top_voters(n)
     most_voters_array[0..n-1].each do |voter|
-      puts voter[1].to_s + " votes from: " + voter[0].url + " (" + voter[0].fullname + ")"
+      puts "   " + voter[1].to_s + " votes from: " + voter[0].url + " (" + voter[0].fullname + ")"
+    end
+  end
+
+  def top_answers(n)
+    @answers.sort {|a,b| -1*(a.votes <=> b.votes) }[0..n-1].each do |answer|
+      puts "   " + answer.votes.to_s + " votes on: " + answer.title
     end
   end
 
   def top_questions_followers(n)
     @questions.sort {|a,b| -1*(a.followers_total <=> b.followers_total) }[0..n-1].each do |question|
-      puts "    " + question.followers_total.to_s + " followers on: " + question.title
+      puts "   " + question.followers_total.to_s + " followers on: " + question.title
     end
   end
 
   def top_questions_answers(n)
     @questions.sort {|a,b| -1*(a.answers_total <=> b.answers_total) }[0..n-1].each do |question|
-      puts "    " + question.answers_total.to_s + " answers on: " + question.title
+      puts "   " + question.answers_total.to_s + " answers on: " + question.title
     end
   end
 

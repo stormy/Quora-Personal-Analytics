@@ -8,7 +8,7 @@ class Answer
     @url = fragment.css('.question_link').attribute('href').value
     @date = fragment.search('a[@class="answer_permalink"]').inner_text
     @bio = bio_check(fragment.css('.feed_item_answer_user'))
-    @votes = fragment.search('strong[@class="voter_count"]').inner_text
+    @votes = fragment.search('strong[@class="voter_count"]').inner_text.to_i
     @voters = build_voters(fragment.css('.answer_voters'))
     @anon_votes = (@votes.to_i - @voters.length.to_i)
     @comments = build_comments(fragment)

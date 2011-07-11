@@ -66,15 +66,20 @@ user = QuoraUser.new(ARGV[0])
 
 def display_answers(user)
   puts "***Answer Stats***"
-  puts "Total Answers: " + user.answers.length.to_s
-  puts "Votes/Answers: " + (user.votes_total.to_f / user.answers.length.to_f).to_s
-  puts "        Votes: " + user.votes_total.to_s
-  puts "  Uniq Voters: " + user.voters_to_array.uniq.length.to_s
-  puts "     Comments: " + user.comments_total.to_s
+  puts "  Total Answers: " + user.answers.length.to_s
+  puts "    Total Votes: " + user.votes_total.to_s
+  puts "      Avg Votes: " + (user.votes_total.to_f / user.answers.length.to_f).to_s
+  puts "      Stand Dev: " + Math.sqrt(user.answers.inject([]){|result,element| result << element.votes}.inject([]){|r,e| r << (e-(user.votes_total/user.answers.length))**2}.inject {|r,e| r+e}/user.answers.length).to_s
+  puts "    Uniq Voters: " + user.voters_to_array.uniq.length.to_s
+  puts "       Comments: " + user.comments_total.to_s
   puts ""
-  puts "***Your Top Voters:"
+  puts "  *Your Top Answers:"
+    user.top_answers(20)
+  puts ""
+  puts "  *Your Top Voters:"
     user.top_voters(20)
   puts ""
+
 end
 
 def display_followers(user)
