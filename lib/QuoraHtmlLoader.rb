@@ -44,7 +44,7 @@ class QuoraHtmlLoader
 
   def posts
     type ="posts"
-    css_selector = ".p1.feed_item.row"
+    css_selector = ".feed_item_answer"
     loadhtml(type, css_selector)
   end
 

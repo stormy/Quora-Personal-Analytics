@@ -1,37 +1,39 @@
 class Post
 
-  attr_reader :title, :url, :votes, :voters, :comments, :content
+  attr_reader :title, :url, :votes, :voters, :comments, :content, :date, :fragment, :comments_total
 
   def initialize(fragment)
-    @title = fragment.css('.answer_user').css('a').inner_text
-    @url = fragment.css('.answer_user').css('a')[0]['href']
-    @votes = fragment.css('.post_votes.light').css('strong').inner_text
-    @voters = build_voters(fragment.css('.post_votes_item').css('.user'))
-    @comments = build_comments(fragment)
-    @content = Content.new(fragment.search('div[@class="feed_item_answer"]'))
-
-
-
+    @fragment = fragment
+    @title = fragment.css('.answer_user .light > a').inner_text.to_s
+    @url = fragment.css('.answer_user .light > a').attribute('href').value
+    @votes = fragment.css('.post_votes.light').css('strong').inner_text.to_i
+    @voters = build_voters(fragment.css('.post_votes_item'))
+    @comments = build_comments(fragment.css('.comments.post_comments.hidden'))
+    @comments_total = fragment.css('.view_comments.supp').inner_text.split(' ')[0].to_i 
+    @content = Content.new(fragment.css('.inline.expanded_q_text'))
+    @date = fragment.css('.timestamp').inner_text.to_s
   end
 
   def build_comments(comment)
-    if comment.search('a[@class="view_comments supp "]').inner_text =~ /Add Comment/
+    if comment.css('.comment_contents').nil?
      []
     else
       comment_list = []
-      comment.css('.comment_contents').each do |x|
-        comment_list << Comment.new(x)
+      comment.css('.comment_contents').each_with_index do |x,i|
+        comment_list << Comment.new(x,i,@url)
       end
       comment_list
     end
   end
-  
 
-  def build_voters(allvoters)
+
+  def build_voters(answer_voters)
     voter_list = []
-    allvoters.each_with_index do |x,i|
-      voter_list << Voter.new(x,i,@url)
-    end
+      answer_voters.css('span.hidden').css('.user').each_with_index do |x,i|
+        voter_list << Voter.new(x,i,@url)
+      end
     voter_list
-  end  
+  end
+
+
 end

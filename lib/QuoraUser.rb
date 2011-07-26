@@ -55,6 +55,11 @@ class QuoraUser
   def load_following_questions
     @following_questions = @load.following_questions
   end
+
+####
+#### Answer related methods
+####
+
   def votes_total
     total_votes = 0 
     answers.each do |x|
@@ -100,6 +105,62 @@ class QuoraUser
       puts "   " + answer.votes.to_s + " votes on: " + answer.title
     end
   end
+
+
+####
+#### Post related methods
+####
+
+  def post_votes_total
+    total_votes = 0
+    posts.each do |x|
+      total_votes += x.votes
+    end
+    total_votes
+  end
+
+  def post_comments_total
+    total_comments = 0
+    posts.each do |x|
+      total_comments += x.comments_total
+    end
+    total_comments
+  end
+
+  def post_voters_to_array
+    all_voters = []
+    posts.each do |x|
+      x.voters.each do |y|
+        all_voters << y
+      end
+    end
+    all_voters
+  end
+
+  def post_most_voters_array
+    voters = Hash.new(0)
+    post_voters_to_array.flatten.each do |x|
+      voters[x] += 1
+    end
+    voters.sort {|a, b| -1*(a[1] <=> b [1])}
+  end
+
+  def post_top_voters(n)
+    post_most_voters_array[0..n-1].each do |voter|
+      puts "   " + voter[1].to_s + " votes from: " + voter[0].url + " (" + voter[0].fullname + ")"
+    end
+  end
+
+  def top_posts(n)
+    @posts.sort {|a,b| -1*(a.votes <=> b.votes) }[0..n-1].each do |post|
+      puts "   " + post.votes.to_s + " votes on: " + post.title
+    end
+  end
+
+
+####
+#### Question related methods
+####
 
   def top_questions_followers(n)
     @questions.sort {|a,b| -1*(a.followers_total <=> b.followers_total) }[0..n-1].each do |question|

@@ -127,8 +127,21 @@ end
 
 def display_posts(user,options)
   puts "***Post Stats***"
-  puts "Total Posts: " + user.posts.length.to_s
-  puts "" 
+  puts "  Total Posts: " + user.posts.length.to_s
+  puts "    Total Votes: " + user.post_votes_total.to_s
+  puts "      Avg Votes: " + (user.post_votes_total.to_f / user.posts.length.to_f).to_s
+  puts "      Stand Dev: " + Math.sqrt(user.posts.inject([]){|result,element| result << element.votes}.inject([]){|r,e| r << (e-(user.post_votes_total/user.posts.length))**2}.inject {|r,e| r+e}/user.posts.length).to_s
+  puts "    Uniq Voters: " + user.post_voters_to_array.uniq.length.to_s
+  puts "       Comments: " + user.post_comments_total.to_s
+  puts ""
+  puts "  *Your Top Posts:"
+    user.top_posts(options[:display_num])
+  puts ""
+  puts "  *Your Top Voters:"
+    user.post_top_voters(options[:display_num])
+  puts ""
+
+
 end
 
 def display_topics(user,options)
@@ -188,10 +201,10 @@ if options.empty? or (options.include? :display_num and options.length == 1)
   display_profile(user,options)
   display_answers(user,options)
   display_questions(user,options)
+  display_posts(user,options)
   display_followers(user,options)
   display_following(user,options)
   display_combine_follow(user,options)
-  display_posts(user,options)
   display_topics(user,options)
   display_mentions(user,options)
 else

@@ -46,8 +46,8 @@ class Answer
      []
     else
       comment_list = []
-      comment.css('.comment_contents').each do |x|
-        comment_list << Comment.new(x)
+      comment.css('.comment_contents').each_with_index do |x,i|
+        comment_list << Comment.new(x,i,@url)
       end
       comment_list
     end
