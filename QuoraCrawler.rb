@@ -46,6 +46,10 @@ OptionParser.new do |opts|
     options[:profile] = v
   end
 
+  opts.on("-y", "--followingquestions", "Crawl the ONLY your logged in account is following") do |v|
+    options[:following_questions] = v
+  end
+
 end.parse!
 
 Watir::Browser.default = 'firefox'
@@ -130,6 +134,12 @@ def get_profile(b, name)
   File.open("#{name}/about.html", 'w') {|f| f.write(b.html)}
 end
 
+def get_following_questions(b, name)
+  b.goto "http://www.quora.com/home/following"
+  click_more(b)
+  File.open("#{name}/following_questions.html", 'w') {|f| f.write(b.html)}
+end
+
 if options.empty?
   get_followers(b, name)
   get_following(b, name)
@@ -170,6 +180,10 @@ else
 
   if options.include? :profile
     get_profile(b, name)
+  end
+
+  if options.include? :following_questions
+    get_following_questions(b, name)
   end
 
 end

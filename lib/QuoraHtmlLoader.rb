@@ -53,6 +53,12 @@ class QuoraHtmlLoader
     css_selector = "html"
     loadhtml(type, css_selector)
   end
+
+  def following_questions
+    type = "following_questions"
+    css_selector = ".feed_item.row.p1"
+    loadhtml(type, css_selector)
+  end
   
   def loadhtml(type, selector)
     file = File.open("#{@name}/#{type}.html")
@@ -76,6 +82,8 @@ class QuoraHtmlLoader
         result << Post.new(item)
       elsif type == 'about'
         result << About.new(item)
+      elsif type == 'following_questions'
+        result << QuestionFollowing.new(item)
       end
     end
     result

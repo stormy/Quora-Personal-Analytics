@@ -23,6 +23,7 @@ require './lib/Question'
 require './lib/QuestionTopic'
 require './lib/Topic'
 require './lib/Voter'
+require './lib/QuestionFollowing'
 
 options = {}
 OptionParser.new do |opts|
@@ -58,6 +59,10 @@ OptionParser.new do |opts|
 
   opts.on("-r", "--profile", "Process profile only") do |v|
     options[:profile] = v
+  end
+
+  opts.on("-y", "--followingquestions", "Process only the questions YOU follow") do |v|
+    options[:following_questions] = v
   end
 
   opts.on("-d", "--display_num NUM", Integer, "Sets number of results to display"){ |n| options[:display_num] = n }
@@ -111,6 +116,13 @@ def display_questions(user,options)
   puts "  Top Answered Questions: "
   user.top_questions_answers(20)
   puts ""
+  puts "  Questions with no answers: "
+  user.questions_no_answers
+  puts ""
+  puts "  Questions with no followers: "
+  user.questions_no_followers
+  puts ""
+
 end
 
 def display_posts(user,options)
@@ -148,7 +160,28 @@ def display_combine_follow(user,options)
   puts ""
 end
 
-
+def display_following_questions(user,options)
+  puts "***Questions you follow stats"
+  puts "Total Questions:          " + user.following_questions.length.to_s
+  puts "  Question Followers :    " + user.following_questions_total_followers.to_s
+  puts "  Question Answers:       " + user.following_questions_total_answers.to_s
+  puts "  Followers/Questions: " + (user.following_questions_total_followers.to_f / user.following_questions.length.to_f).to_s
+  puts "  Answers/Questions: " + (user.following_questions_total_answers.to_f / user.following_questions.length.to_f).to_s
+  puts "  Questions not Followed: " + user.following_questions_not_followed.to_s
+  puts "  Questions not Answered: " + user.following_questions_not_answered.to_s
+  puts "  Top Followed Questions: "
+  user.top_following_questions_followers(20)
+  puts ""
+  puts "  Top Answered Questions: "
+  user.top_following_questions_answers(20)
+  puts ""
+  puts "  Questions with no answers: "
+  user.following_questions_no_answers
+  puts ""
+  puts "  Questions with no followers: "
+  user.following_questions_no_followers
+  puts ""
+end
 
 if options.empty? or (options.include? :display_num and options.length == 1)
   user.load_all_data
@@ -205,5 +238,11 @@ else
     user.load_profile
     display_profile(user,options)
   end
+
+  if options.include? :following_questions
+    user.load_following_questions
+    display_following_questions(user,options)
+  end
+
 end
 

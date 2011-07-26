@@ -1,6 +1,6 @@
 class QuoraUser
 
-  attr_reader :name, :url, :answers, :questions, :followers, :following, :topics, :posts, :mentions, :about
+  attr_reader :name, :url, :answers, :questions, :followers, :following, :topics, :posts, :mentions, :about, :following_questions
 
   def initialize(user_name)
     @name = user_name
@@ -17,6 +17,7 @@ class QuoraUser
     @mentions = @load.mentions
     @posts = @load.posts
     @about = @load.about
+    @following_questions = @load.following_questions
   end
 
   def load_answers
@@ -51,7 +52,9 @@ class QuoraUser
    @about = @load.about 
   end
 
-
+  def load_following_questions
+    @following_questions = @load.following_questions
+  end
   def votes_total
     total_votes = 0 
     answers.each do |x|
@@ -152,6 +155,86 @@ class QuoraUser
       end
     end
     question_not_followed
+  end
+
+  def questions_no_answers
+    @questions.reject {|x| x.answers_total > 0}.each do |question|
+      puts "   " + question.title
+    end
+  end
+
+  def questions_no_followers
+    @questions.reject {|x| x.followers_total > 1}.each do |question|
+      puts "   " + question.title
+    end
+  end
+
+  def following_questions_total_answers
+    question_answers = 0
+    @following_questions.each do |x|
+      question_answers += x.answers_total
+    end
+    question_answers
+  end
+
+  def following_questions_total_followers
+    question_followers = 0
+    @following_questions.each do |x|
+      question_followers += x.followers_total
+    end
+    question_followers
+  end
+
+  def following_questions_most_followed
+    @following_questions.max {|a,b| a.followers_total <=> b.followers_total}
+  end
+
+  def following_questions_not_answered
+    question_not_answered = 0
+    @following_questions.each do |x|
+      if x.answers_total == 0
+        question_not_answered += 1
+      end
+    end
+    question_not_answered
+  end
+
+  def following_questions_not_followed
+    question_not_followed = 0
+    @following_questions.each do |x|
+      if x.followers_total == 1
+        question_not_followed += 1
+      end
+    end
+    question_not_followed
+  end
+
+  def following_questions_most_answered
+    @following_questions.max {|a,b| a.answers_total <=> b.answers_total}
+  end
+
+  def top_following_questions_followers(n)
+    @following_questions.sort {|a,b| -1*(a.followers_total <=> b.followers_total) }[0..n-1].each do |question|
+      puts "   " + question.followers_total.to_s + " followers on: " + question.title
+    end
+  end
+
+  def top_following_questions_answers(n)
+    @following_questions.sort {|a,b| -1*(a.answers_total <=> b.answers_total) }[0..n-1].each do |question|
+      puts "   " + question.answers_total.to_s + " answers on: " + question.title
+    end
+  end
+
+  def following_questions_no_answers
+    @following_questions.reject {|x| x.answers_total > 0}.each do |question|
+      puts "   " + question.title
+    end
+  end
+
+  def following_questions_no_followers
+    @following_questions.reject {|x| x.followers_total > 1}.each do |question|
+      puts "   " + question.title
+    end
   end
 
 
