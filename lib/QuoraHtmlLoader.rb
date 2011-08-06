@@ -8,13 +8,13 @@ class QuoraHtmlLoader
 
   def answers
     type = "answers"
-    css_selector = ".e_col.w4_5"
+    css_selector = ".pagedlist_item"
     loadhtml(type, css_selector)
   end
 
   def questions
     type = "questions"
-    css_selector = ".e_col.w4_5"
+    css_selector = ".pagedlist_item"
     loadhtml(type, css_selector)
   end
 
@@ -44,7 +44,7 @@ class QuoraHtmlLoader
 
   def posts
     type ="posts"
-    css_selector = ".feed_item_answer"
+    css_selector = ".pagedlist_item"
     loadhtml(type, css_selector)
   end
 

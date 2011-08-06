@@ -1,11 +1,12 @@
 class Answer
 
-  attr_reader :fragment, :title, :url, :bio, :date, :votes, :voters, :anon_votes, :content, :comments_total, :comments, :total_comments
+  attr_reader :fragment, :title, :url, :bio, :date, :votes, :voters, :anon_votes, :content, :comments_total, :comments, :total_comments, :question_url
 
   def initialize(fragment)
     @fragment = fragment
     @title = fragment.css('.question_link').inner_text
-    @url = fragment.css('.question_link').attribute('href').value
+    @question_url = fragment.css('.question_link').attribute('href').value
+    @url = fragment.css('.answer_permalink')[0][:href]
     @date = fragment.search('a[@class="answer_permalink"]').inner_text
     @bio = bio_check(fragment.css('.feed_item_answer_user'))
     @votes = fragment.search('strong[@class="voter_count"]').inner_text.to_i
@@ -33,19 +34,14 @@ class Answer
     @comments.length
   end
 
-  def strip_divs(content_div)
-    stripped = content_div
-     stripped.css('.comments.answer_comments.hidden').remove
-     stripped.css('.answer_user').remove
-     stripped.css('.action_bar').remove
-     stripped
-  end
-
   def build_comments(comment)
-    if comment.search('a[@class="view_comments supp "]').inner_text =~ /Add Comment/
-     []
-    else
+    comment_list = []
+    if comment.css('.comment_contents').nil? or comment.css('.comment_contents .action_bar').inner_text.include?("Anon User")
+     comment_list = []
+    elsif comment.css('.comment_contents .action_bar .user').nil?
+      puts "hellllllllloooooo"
       comment_list = []
+    else
       comment.css('.comment_contents').each_with_index do |x,i|
         comment_list << Comment.new(x,i,@url)
       end

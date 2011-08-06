@@ -5,7 +5,7 @@ class Post
   def initialize(fragment)
     @fragment = fragment
     @title = fragment.css('.answer_user .light > a').inner_text.to_s
-    @url = fragment.css('.answer_user .light > a').attribute('href').value
+    @url = fragment.css('.timestamp > a')[0]['href']
     @votes = fragment.css('.post_votes.light').css('strong').inner_text.to_i
     @voters = build_voters(fragment.css('.post_votes_item'))
     @comments = build_comments(fragment.css('.comments.post_comments.hidden'))
@@ -15,8 +15,10 @@ class Post
   end
 
   def build_comments(comment)
-    if comment.css('.comment_contents').nil?
-     []
+    if comment.css('.comment_contents').nil? or comment.css('.comment_contents .action_bar').inner_text.include?("Anon User")
+     comment_list = []
+   elsif (comment.css('.comment_contents .action_bar').inner_text =~ /Anon/) == 0
+     comment_list = []
     else
       comment_list = []
       comment.css('.comment_contents').each_with_index do |x,i|

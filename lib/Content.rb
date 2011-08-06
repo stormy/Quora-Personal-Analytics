@@ -4,7 +4,7 @@ class Content
   attr_reader :text, :images, :breaks, :italics, :blockquote, :list_item, :links, :underline, :codeblock, :latex, :emotion, :emotionwords
 
   def initialize(fragment)
-    strip_divs(fragment.dup)
+    fragment = strip_divs(fragment)
     @text = fragment.inner_text
     @images = fragment.css('.qtext_image')
     @breaks = fragment.css('br')
@@ -20,7 +20,7 @@ class Content
   end
 
   def strip_divs(content_div)
-    stripped = content_div
+    stripped = Nokogiri::XML(content_div.to_xml)
      stripped.css('.comments.answer_comments.hidden').remove
      stripped.css('.answer_user').remove
      stripped.css('.action_bar').remove

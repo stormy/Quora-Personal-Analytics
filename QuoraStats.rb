@@ -80,14 +80,16 @@ def display_answers(user, options)
   puts "      Stand Dev: " + Math.sqrt(user.answers.inject([]){|result,element| result << element.votes}.inject([]){|r,e| r << (e-(user.votes_total/user.answers.length))**2}.inject {|r,e| r+e}/user.answers.length).to_s
   puts "    Uniq Voters: " + user.voters_to_array.uniq.length.to_s
   puts "       Comments: " + user.comments_total.to_s
+  puts "  Total 0 votes: " + user.total_zero_votes.to_s
   puts ""
   puts "  *Your Top Answers:"
     user.top_answers(options[:display_num])
   puts ""
   puts "  *Your Top Voters:"
-    user.top_voters(options[:display_num])
+  user.top_voters(options[:display_num])
   puts ""
-
+  user.first_voters
+  puts ""
 end
 
 def display_followers(user,options)
@@ -130,9 +132,10 @@ def display_posts(user,options)
   puts "  Total Posts: " + user.posts.length.to_s
   puts "    Total Votes: " + user.post_votes_total.to_s
   puts "      Avg Votes: " + (user.post_votes_total.to_f / user.posts.length.to_f).to_s
-  puts "      Stand Dev: " + Math.sqrt(user.posts.inject([]){|result,element| result << element.votes}.inject([]){|r,e| r << (e-(user.post_votes_total/user.posts.length))**2}.inject {|r,e| r+e}/user.posts.length).to_s
+#  puts "      Stand Dev: " + Math.sqrt(user.posts.inject([]){|result,element| result << element.votes}.inject([]){|r,e| r << (e-(user.post_votes_total/user.posts.length))**2}.inject {|r,e| r+e}/user.posts.length).to_s
   puts "    Uniq Voters: " + user.post_voters_to_array.uniq.length.to_s
   puts "       Comments: " + user.post_comments_total.to_s
+  puts "  Total 0 votes: " + user.post_zero_votes.to_s
   puts ""
   puts "  *Your Top Posts:"
     user.top_posts(options[:display_num])
@@ -162,6 +165,12 @@ def display_profile(user,options)
   puts "User URL: " + user.url.to_s
   puts "User BIO: "
   puts ""
+  puts "Questions/Answers: " + (user.questions.length.to_f/user.answers.length.to_f).to_s + " : 1" 
+  puts "Posts/Answers: " + (user.posts.length.to_f/user.answers.length.to_f).to_s + " : 1" 
+  puts "Followers/Following: " + (user.followers.length.to_f/user.following.length.to_f).to_s + " : 1" 
+  puts "Total not following back: " + (user.following.collect {|x| x.url} - user.followers.collect {|x| x.url}).length.to_s
+  puts "Followed by, but not following back: " + (user.followers.collect {|x| x.url} - user.following.collect {|x| x.url}).length.to_s
+  puts ""
 end
 
 def display_combine_follow(user,options)
@@ -169,6 +178,7 @@ def display_combine_follow(user,options)
   puts (user.following.collect {|x| x.url} - user.followers.collect {|x| x.url}) #not following you back
   puts ""
   puts "***Not following, but followed by:"
+  puts ""
   puts (user.followers.collect {|x| x.url} - user.following.collect {|x| x.url}) #not following but follewd by
   puts ""
 end

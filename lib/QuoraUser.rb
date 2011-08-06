@@ -4,7 +4,7 @@ class QuoraUser
 
   def initialize(user_name)
     @name = user_name
-    @url = "http://www.quora.com/" + @name + "/"
+    @url = "/" + @name
     @load = QuoraHtmlLoader.new(@name)
   end
 
@@ -17,7 +17,7 @@ class QuoraUser
     @mentions = @load.mentions
     @posts = @load.posts
     @about = @load.about
-    @following_questions = @load.following_questions
+   # @following_questions = @load.following_questions
   end
 
   def load_answers
@@ -54,6 +54,43 @@ class QuoraUser
 
   def load_following_questions
     @following_questions = @load.following_questions
+  end
+
+  def graph
+    {:follows => follows_graph,
+      :topics => topics_graph,
+      :answers => answers_graph,
+      :posts => posts_graph,
+      :questions => questions_graph
+    }
+  end
+
+####
+#### Topic related methods
+####
+
+  def topics_graph
+    t = []
+    topics.each do |x|
+      topic = {:url => x.url, :title => x.title}
+       t << topic
+    end
+   t 
+  end
+
+
+
+####
+#### Following related methods
+####
+
+  def follows_graph
+    follows = []
+    following.each do |x|
+      follow = {:url => x.url, :name => x.fullname}
+      follows << follow
+    end
+    follows
   end
 
 ####
@@ -106,6 +143,64 @@ class QuoraUser
     end
   end
 
+  def total_zero_votes
+    count = 0
+    answers.each do |x|
+      if x.votes == 0
+        count += 1
+      end
+    end
+    count
+  end
+
+  def first_voters
+    first_voters = []
+    top_first = Hash.new(0)
+
+    answers.each do |x|
+      if !x.voters.empty?
+        first_voters << x.voters[0].url
+      end
+    end
+
+    first_voters.each do |x|
+      top_first[x] += 1
+    end
+    top_first.sort {|a,b| -1*(a[1] <=> b [1])}.each do |k,v|
+      puts "   " + k + " was the first voter " + v.to_s + " times."
+    end
+
+  end
+
+  def answers_graph
+    answers_array = []
+
+    answers.each do |x|
+      voters = []
+      if !x.voters.empty?
+      x.voters.each do |y|
+        voters << y.url
+      end
+      end
+
+      commenters = []
+      if !x.comments.empty?
+      x.comments.each do |y|
+        commenters << y.url
+      end
+      end
+
+      answer = {:title => x.title,
+                :answer_url => x.url,
+                :question_url => x.question_url,
+                :voters => voters,
+                :commenters => commenters
+      }
+      answers_array << answer
+    end
+    answers_array
+  end
+
 
 ####
 #### Post related methods
@@ -156,6 +251,47 @@ class QuoraUser
       puts "   " + post.votes.to_s + " votes on: " + post.title
     end
   end
+
+  def post_zero_votes
+    count = 0
+    posts.each do |x|
+      if x.votes == 0
+        count += 1
+      end
+    end
+    count
+  end
+
+  def posts_graph
+    posts_array = []
+
+    posts.each do |x|
+      voters = []
+      if !x.voters.empty?
+      x.voters.each do |y|
+        voters << y.url
+      end
+      end
+
+      commenters = []
+      if !x.comments.empty?
+      x.comments.each do |y|
+        commenters << y.url
+      end
+      end
+
+      post = {:title => x.title,
+                :post_url => x.url,
+                :voters => voters,
+                :commenters => commenters
+      }
+      posts_array << post
+    end
+    posts_array
+  end
+
+
+
 
 
 ####
@@ -298,6 +434,14 @@ class QuoraUser
     end
   end
 
+  def questions_graph
+    q = []
+    questions.each do |x|
+      question = {:url => x.url, :title => x.title}
+      q << question
+    end
+    q
+  end
 
 end
 
