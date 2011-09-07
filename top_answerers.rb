@@ -110,7 +110,7 @@ def process_chunk(chunk,data)
       end
 
       multi.responses[:failed].each do |failed|
-        errors << failed.options[:query]["ref"] unless failed.nil?
+        errors << failed.options[:query]["name"] unless failed.nil?
       end
 
       EventMachine.stop
