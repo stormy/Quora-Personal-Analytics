@@ -94,7 +94,7 @@ def process_chunk(chunk,data)
     multi = EventMachine::MultiRequest.new
 
     chunk.each do |item|
-      multi.add(EventMachine::HttpRequest.new("http://www.quora.com/#{item}/").get :head => {"User-Agent" => "RubyWatir/1 (stormyshippy@gmail.com)"}, :query=> {'name' => item})
+      multi.add(EventMachine::HttpRequest.new("http://www.quora.com/#{item}/").get :query=> {'name' => item})
     end
 
     multi.callback do
